@@ -46,8 +46,9 @@ block content
                                                 each doc in documents
                                                     div.form-group
                                                         div.btn.rm--btn.float-right Remove this document
+                                                        div.btn.dwn--btn.float-right Export
                                                         label Documentation title:
-                                                        input.form-control(type='text' placeholder='Enter Title' name='title[]' value=doc.title)
+                                                        input.title-field.form-control(type='text' placeholder='Enter Title' name='title[]' value=doc.title)
                                                         input.id-filed(hidden=true name='fid[]' value=doc.id)
                                                         textarea.summernote(name='editordata[]') #{ doc.html }
 
@@ -68,6 +69,18 @@ block content
         }
 
     script.
+        function download(filename, text) {
+          var element = document.createElement('a');
+          element.setAttribute('href', 'data:text/html;charset=utf-8,' + encodeURIComponent(text));
+          element.setAttribute('download', filename);
+
+          element.style.display = 'none';
+          document.body.appendChild(element);
+
+          element.click();
+
+          document.body.removeChild(element);
+        }
         window.addEventListener('load', function () {
             $(document).ready(function () {
                 $("#copy-me").hide(0);
@@ -76,6 +89,16 @@ block content
                  $('.rm--btn').click(x => {
                         $(x.target).parent().remove();
                  });
+
+                  $('.dwn--btn').click(x => {
+
+                        const cnt = $(x.target).parent().find('.summernote').text();
+                        const title = $(x.target).parent().find('.title-field').val();
+
+                        download(title+".html", cnt);
+                 });
+
+
 
                 $('.add--btn').click(() => {
                     const newItem = $("#copy-me").clone().removeAttr('id').show();

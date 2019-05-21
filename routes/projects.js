@@ -154,11 +154,13 @@ router.post('/:id/edit-doc/', ProjectHelper.isSMorAdmin, async function(req, res
         const html =  data['editordata[]'][i];
         const fileId =  data['fid[]'][i];
 
-        jsonList.push({
-            id: fileId,
-            html: html,
-            title: title
-        });
+        if (fileId) {
+            jsonList.push({
+                id:    fileId,
+                html:  html,
+                title: title
+            });
+        }
     });
 
     const filePath = path.join(process.cwd(), 'storage', req.params.id + '.json');
