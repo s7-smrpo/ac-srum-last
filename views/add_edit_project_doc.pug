@@ -42,6 +42,9 @@ block content
                                 form.well.form-horizontal(method='POST' action='/projects/'+ toEditProject.id + '/edit-doc/')#project_form
                                     div.panel-body
                                         div.col-md-12.col-md-offset-0
+                                            p Import User Documentation (*.txt or *.html)
+                                            input(type='file' onchange='openFile(event)')
+                                            hr
                                             div#items--c
                                                 each doc in documents
                                                     div.form-group
@@ -69,6 +72,27 @@ block content
         }
 
     script.
+        var openFile = function(event) {
+            var input = event.target;
+
+            var reader = new FileReader();
+            reader.onload = function(){
+              var text = reader.result;
+
+
+                    const newItem = $("#copy-me").clone().removeAttr('id').show();
+
+                    $('#items--c').append(newItem);
+                    $(newItem).find('.summernote-cold').text(text);
+                    $(newItem).find('.summernote-cold').summernote();
+                    $(newItem).find('.id-filed').val(+ new Date());
+
+                    $('.rm--btn').click(x => {
+                        $(x.target).parent().remove();
+                    });
+            };
+            reader.readAsText(input.files[0]);
+          };
         function download(filename, text) {
           var element = document.createElement('a');
           element.setAttribute('href', 'data:text/html;charset=utf-8,' + encodeURIComponent(text));
