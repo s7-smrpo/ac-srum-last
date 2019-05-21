@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "debug": "node --inspect ./bin/www"
+    "debug": "node --inspect ./bin/www",
+    "sequelize-db:seed:all ": "sequelize db:seed:all"
   },
   "dependencies": {
     "bcrypt": "^3.0.4",
@@ -14,6 +15,7 @@
     "express": "~4.16.0",
     "express-session": "^1.15.6",
     "fs": "0.0.1-security",
+    "fs-extra": "^8.0.1",
     "http-errors": "~1.6.2",
     "moment": "^2.24.0",
     "morgan": "~1.9.0",

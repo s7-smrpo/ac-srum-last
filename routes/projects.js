@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var moment = require('moment');
+var fs = require('fs-extra');
+var path = require('path');
 
 var models = require('../models/');
 var middleware = require('./middleware.js');
@@ -116,6 +118,56 @@ router.post('/:id/edit/', ProjectHelper.isSMorAdmin, async function(req, res, ne
         pageName: 'projects', username: req.user.username, toEditProject: toEditProject,
         isUser: req.user.is_user, success: req.flash('success') });
 });
+
+
+
+// ------------------ endpoint for editing user documentation projects ------------------
+router.get('/:id/edit-doc/', ProjectHelper.isSMorAdmin, async function(req, res, next) {
+
+    let toEditProject = await ProjectHelper.getProjectToEdit(req.params.id);
+    let users = await User.findAllUsers();
+
+    let documents = [ ];
+    const filePath = path.join(process.cwd(), 'storage', req.params.id + '.json');
+    try {
+        documents =  fs.readJsonSync(filePath) || [];
+    } catch (e) {
+
+    }
+
+    res.render('add_edit_project_doc', { errorMessages: 0, title: 'AC scrum vol2', users: users,
+        pageName: 'projects', username: req.user.username, toEditProject: toEditProject,
+        isUser: req.user.is_user, success: 0, documents });
+});
+
+router.post('/:id/edit-doc/', ProjectHelper.isSMorAdmin, async function(req, res, next) {
+
+    var data = req.body;
+
+    let jsonList = [];
+
+    data['title[]']      = Array.isArray(data['title[]']) ? data['title[]'] : [data['title[]']];
+    data['editordata[]'] = Array.isArray(data['editordata[]']) ? data['editordata[]'] : [data['editordata[]']];
+    data['fid[]']        = Array.isArray(data['fid[]']) ? data['fid[]'] : [data['fid[]']];
+
+    (data['title[]'] || []).map((title, i) => {
+        const html =  data['editordata[]'][i];
+        const fileId =  data['fid[]'][i];
+
+        jsonList.push({
+            id: fileId,
+            html: html,
+            title: title
+        });
+    });
+
+    const filePath = path.join(process.cwd(), 'storage', req.params.id + '.json');
+    fs.writeJsonSync(filePath, jsonList);
+
+    res.redirect('/projects/'+req.params.id+'/edit-doc/');
+});
+
+
 
 // ------------------ endpoint for creating new projects ------------------
 
