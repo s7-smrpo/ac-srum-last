@@ -49,41 +49,40 @@ block content
                                         .clearfix
                                         hr
                                         ul.media-list
-                                            li.media
-                                                a.pull-left(href='#')
-                                                    img.img-circle(src='/profile.png', alt='')
-                                                .media-body
-                                                    span.text-muted.pull-right
-                                                        small.text-muted 30 min ago
-                                                    strong.text-success @MartinoMont
-                                                    p
-                                                        | Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                                        | Lorem ipsum dolor sit amet,
-                                                        a(href='#') #consecteturadipiscing
-                                                        | .
-                                            li.media
-                                                a.pull-left(href='#')
-                                                    img.img-circle(src='/profile.png', alt='')
-                                                .media-body
-                                                    span.text-muted.pull-right
-                                                        small.text-muted 30 min ago
-                                                    strong.text-success @LaurenceCorreil
-                                                    p
-                                                        | Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                                        | Lorem ipsum dolor
-                                                        a(href='#') #ipsumdolor
-                                                        | adipiscing elit.
-                                            li.media
-                                                a.pull-left(href='#')
-                                                    img.img-circle(src='/profile.png', alt='')
-                                                .media-body
-                                                    span.text-muted.pull-right
-                                                        small.text-muted 30 min ago
-                                                    strong.text-success @JohnNida
-                                                    p
-                                                        | Lorem ipsum dolor
-                                                        a(href='#') #sitamet
-                                                        |  sit amet, consectetur adipiscing elit.
+                                            each post in projectBacklog
+                                                li.media
+                                                    a.pull-left(href='#')
+                                                        img.img-circle(src='/profile.png', alt='')
+                                                    .media-body
+                                                        span.text-muted.pull-right
+                                                            small.text-muted #{post.date}
+                                                        strong.text-success @#{post.username}
+                                                        p
+                                                            | #{post.comment}
+
+                                            //li.media
+                                            //    a.pull-left(href='#')
+                                            //        img.img-circle(src='/profile.png', alt='')
+                                            //    .media-body
+                                            //        span.text-muted.pull-right
+                                            //            small.text-muted 30 min ago
+                                            //        strong.text-success @LaurenceCorreil
+                                            //        p
+                                            //            | Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                            //            | Lorem ipsum dolor
+                                            //            a(href='#') #ipsumdolor
+                                            //            | adipiscing elit.
+                                            //li.media
+                                            //    a.pull-left(href='#')
+                                            //        img.img-circle(src='/profile.png', alt='')
+                                            //    .media-body
+                                            //        span.text-muted.pull-right
+                                            //            small.text-muted 30 min ago
+                                            //        strong.text-success @JohnNida
+                                            //        p
+                                            //            | Lorem ipsum dolor
+                                            //            a(href='#') #sitamet
+                                            //            |  sit amet, consectetur adipiscing elit.
 
 
 
