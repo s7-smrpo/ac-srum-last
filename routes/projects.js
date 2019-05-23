@@ -170,6 +170,27 @@ router.post('/:id/edit-doc/', ProjectHelper.isSMorAdmin, async function(req, res
 });
 
 
+// ------------------ endpoint for product backlog ------------------
+router.get('/:id/backlog/', ProjectHelper.isSMorAdmin, async function(req, res, next) {
+
+    let toEditProject = await ProjectHelper.getProjectToEdit(req.params.id);
+    let users = await User.findAllUsers();
+
+    let documents = [ ];
+    const filePath = path.join(process.cwd(), 'storage', req.params.id + '.json');
+    try {
+        documents =  fs.readJsonSync(filePath) || [];
+    } catch (e) {
+
+    }
+
+    res.render('project_backlog', { errorMessages: 0, title: 'AC scrum vol2', users: users,
+        pageName: 'projects', username: req.user.username, toEditProject: toEditProject,
+        isUser: req.user.is_user, success: 0, documents });
+});
+
+
+
 
 // ------------------ endpoint for creating new projects ------------------
 

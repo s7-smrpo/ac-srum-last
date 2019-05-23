@@ -1,0 +1,112 @@
+extends layout
+
+block content
+
+    main.container(role="main")
+        .container.theme-showcase
+            .page-header
+                h3 Project Backlog
+
+                .container
+                    nav.navbar.navbar-expand-lg.navbar-light.bg-light
+                        ul.navbar-nav.mr-auto
+                            li.nav-item
+                            if toEditProject
+                                a.nav-link(href='/projects/' + toEditProject.id + '/view')
+                                    i.fas.fa-chevron-left
+                                    |  Back
+
+                            else
+                                a.nav-link(href='/admin_panel/')
+                                    i.fas.fa-chevron-left
+                                    |  Back
+
+                hr
+            div.main.container
+
+                    if errorMessages !== 0
+                        .col-md-12.col-md-offset-0.margin-top20
+                            .alert.alert-danger(role="alert")
+                                h4.alert-heading #{errorMessages}
+                                p Something went wrong. Please check if your form is correct or if this project name already exists - otherwise try later or contact application administrator.
+
+                    if success !== 0
+                        .col-md-12.col-md-offset-0.margin-top20
+                            .alert.alert-success(role="alert")
+                                h4.alert-heading Success.
+                                p #{success}.
+
+                    .row.bootstrap.snippets
+                        .col-md-12.col-md-offset-0.margin-top20
+                            .comment-wrapper
+                                .panel.panel-info
+                                    .panel-heading
+                                        | Comment panel
+                                    .panel-body
+                                        textarea.form-control(placeholder='write a comment...', rows='3')
+                                        br
+                                        button.btn.btn-info.pull-right(type='button') Post
+                                        .clearfix
+                                        hr
+                                        ul.media-list
+                                            li.media
+                                                a.pull-left(href='#')
+                                                    img.img-circle(src='/profile.png', alt='')
+                                                .media-body
+                                                    span.text-muted.pull-right
+                                                        small.text-muted 30 min ago
+                                                    strong.text-success @MartinoMont
+                                                    p
+                                                        | Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                                        | Lorem ipsum dolor sit amet,
+                                                        a(href='#') #consecteturadipiscing
+                                                        | .
+                                            li.media
+                                                a.pull-left(href='#')
+                                                    img.img-circle(src='/profile.png', alt='')
+                                                .media-body
+                                                    span.text-muted.pull-right
+                                                        small.text-muted 30 min ago
+                                                    strong.text-success @LaurenceCorreil
+                                                    p
+                                                        | Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                                        | Lorem ipsum dolor
+                                                        a(href='#') #ipsumdolor
+                                                        | adipiscing elit.
+                                            li.media
+                                                a.pull-left(href='#')
+                                                    img.img-circle(src='/profile.png', alt='')
+                                                .media-body
+                                                    span.text-muted.pull-right
+                                                        small.text-muted 30 min ago
+                                                    strong.text-success @JohnNida
+                                                    p
+                                                        | Lorem ipsum dolor
+                                                        a(href='#') #sitamet
+                                                        |  sit amet, consectetur adipiscing elit.
+
+
+
+
+    style.
+        body {
+            margin-top: 20px;
+        }
+
+        .comment-wrapper .panel-body {
+            max-height: 650px;
+            overflow: auto;
+        }
+
+        .comment-wrapper .media-list .media img {
+            width: 64px;
+            height: 64px;
+            border: 2px solid #e5e7e8;
+            margin-right: 20px;
+        }
+
+        .comment-wrapper .media-list .media {
+            border-bottom: 1px dashed #efefef;
+            margin-bottom: 25px;
+        }
+
