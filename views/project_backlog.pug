@@ -38,14 +38,17 @@ block content
 
                     .row.bootstrap.snippets
                         .col-md-12.col-md-offset-0.margin-top20
+                            .panel-heading
+                                | Comment panel
+                            form.well.form-horizontal#post_form(method='POST' action='/projects/' + projectId + '/backlog/')
+                                textarea.form-control#comment(name='comment' placeholder='write a comment...', rows='3')
+                                br
+                                button.btn.btn-info.pull-right(type='submit') Post
                             .comment-wrapper
                                 .panel.panel-info
-                                    .panel-heading
-                                        | Comment panel
+
                                     .panel-body
-                                        textarea.form-control(placeholder='write a comment...', rows='3')
-                                        br
-                                        button.btn.btn-info.pull-right(type='button') Post
+
                                         .clearfix
                                         hr
                                         ul.media-list
@@ -60,29 +63,6 @@ block content
                                                         p
                                                             | #{post.comment}
 
-                                            //li.media
-                                            //    a.pull-left(href='#')
-                                            //        img.img-circle(src='/profile.png', alt='')
-                                            //    .media-body
-                                            //        span.text-muted.pull-right
-                                            //            small.text-muted 30 min ago
-                                            //        strong.text-success @LaurenceCorreil
-                                            //        p
-                                            //            | Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                            //            | Lorem ipsum dolor
-                                            //            a(href='#') #ipsumdolor
-                                            //            | adipiscing elit.
-                                            //li.media
-                                            //    a.pull-left(href='#')
-                                            //        img.img-circle(src='/profile.png', alt='')
-                                            //    .media-body
-                                            //        span.text-muted.pull-right
-                                            //            small.text-muted 30 min ago
-                                            //        strong.text-success @JohnNida
-                                            //        p
-                                            //            | Lorem ipsum dolor
-                                            //            a(href='#') #sitamet
-                                            //            |  sit amet, consectetur adipiscing elit.
 
 
 
@@ -109,3 +89,24 @@ block content
             margin-bottom: 25px;
         }
 
+    script.
+        window.addEventListener('load', function () {
+            $('#post_form').bootstrapValidator({
+                // To use feedback icons, ensure that you use Bootstrap v3.1.0 or later
+                framework: 'bootstrap',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    comment: {
+                        validators: {
+                            notEmpty: {
+                                message: 'Please enter a few words.'
+                            }
+                        }
+                    }
+                },
+            });
+         });

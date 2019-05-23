@@ -66,6 +66,20 @@ async function getProjectBacklog(pid) {
     return projectBacklog;
 }
 
+async function addProjectBacklogPost(params) {
+    // let params = {}
+    // params['comment'] = data.comment;
+    // params['userID']  = req.user.id;
+    // params['date']    = moment();
+    // params['projID']  = req.params.id;
+    const createdPost = ProjectBacklog.build({
+        comment     : params['comment'],
+        user_id     : params['userID'],
+        date        : params['date'],
+        project_id  : params['projID'],
+    });
+    await createdPost.save();
+}
 
 
 async function getMyProjects(uid) {
@@ -318,4 +332,5 @@ module.exports = {
     getProject,
     getSMProjects,
     getProjectBacklog,
+    addProjectBacklogPost,
 };
