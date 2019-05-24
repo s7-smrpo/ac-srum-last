@@ -156,6 +156,53 @@ async function checkIfSMorMember(req, res, next) {
     }
 }
 
+async function getTaskLoggedTimeArray(task) {
+    let timetableArray = await Timetable.findAll({
+        where: {
+            task_id: task.id
+        },
+        order: [
+            ['id', 'DESC']
+        ],
+    });
+
+    return (timetableArray || []).map(x => x.dataValues)
+        .map(x => {
+
+            x.loggedTime = Math.round(  x.loggedTime * 100) / 100;
+            return x;
+        })
+        .sort((a, b) => a.loggedDate -b.loggedDate);
+}
+
+async function setTaskLoggedTimeArray(task, times) {
+    for (const time of times) {
+        const createdTimetable = Timetable.build({
+            remainingTime: time.remainingTime,
+            loggedTime: time.loggedTime,
+            loggedDate: time.loggedDate,
+            autoLoggedDate: time.autoLoggedDate,
+            task_id: task.id,
+            loggedUser: time.assignee
+        });
+
+        await createdTimetable.save();
+    }
+}
+
+async function deleteTaskLoggedTimes(task) {
+    try {
+        return !!await Timetable.destroy({
+            where: {
+                task_id: task.id
+            }
+        });
+    } catch (e) {
+        console.log("Can't delete " + e);
+        return false;
+    }
+}
+
 async function getTaskLoggedTime(task) {
 
     let timetableArray = await Timetable.findAll({
@@ -179,6 +226,9 @@ async function getTaskLoggedTime(task) {
 }
 
 module.exports = {
+    getTaskLoggedTimeArray,
+    deleteTaskLoggedTimes,
+    setTaskLoggedTimeArray,
     listTasks,
     listProjectTasks,
     listUserTasks,

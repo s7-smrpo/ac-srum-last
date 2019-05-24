@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var models = require('../models/');
+var moment = require('moment');
 
 const User = models.User;
 const Story = models.Story;
@@ -150,12 +151,14 @@ router.get('/:taskId/edit', TasksHelper.checkIfSMorMember, async function(req, r
     }
     let available_time_for_new_task = (taskStory.estimatedTime - storyTasksTimeSum) > 0 ? (taskStory.estimatedTime - storyTasksTimeSum) : 0 ;
 
+    let timeEntries  = await TasksHelper.getTaskLoggedTimeArray(currentTask);
+
     res.render('add_edit_task', {
-        errorMessages: 0,
+        errorMessages: 0, timeEntries,
         success: 0,
         pageName: 'tasks',
         uid: req.user.id,
-        username: req.user.username,
+        username: req.user.username,user: req.user,
         isUser: req.user.is_user,
         projectId: currentTask.project_id,
         storyId: currentTask.story_id,
@@ -217,15 +220,35 @@ router.post('/:taskId/edit/', TasksHelper.checkIfSMorMember, async function(req,
 
     await task.save();
 
+    ////////////////
+    let timeEntries  = await TasksHelper.getTaskLoggedTimeArray(task);
+    data['id[]']      = Array.isArray(data['id[]']) ? data['id[]'] : [data['id[]']];
+    data['loggedDate[]']      = Array.isArray(data['loggedDate[]']) ? data['loggedDate[]'] : [data['loggedDate[]']];
+    data['loggedTime[]'] = Array.isArray(data['loggedTime[]']) ? data['loggedTime[]'] : [data['loggedTime[]']];
+    data['remainingTime[]']        = Array.isArray(data['remainingTime[]']) ? data['remainingTime[]'] : [data['remainingTime[]']];
+    const timeEntriesToSave = [];
+    (data['id[]'] || []).map((id, i) => {
+        if (data['loggedTime[]'][i] !== '0') {
+            const f = timeEntries.filter(x => x.id == id)[0];
+            f.loggedTime =  + data['loggedTime[]'][i];
+            f.remainingTime =  + data['remainingTime[]'][i];
+            timeEntriesToSave.push(f);
+        }
+    });
+    await TasksHelper.deleteTaskLoggedTimes(task);
+    await TasksHelper.setTaskLoggedTimeArray(task, timeEntriesToSave);
+    timeEntries  = await TasksHelper.getTaskLoggedTimeArray(task);
+    //////////////////
+
     let task_updated = await TasksHelper.getTask(task_id);
 
     req.flash('success', 'Task - ' + task_updated.name + ' has been successfully updated');
     res.render('add_edit_task', {
-        errorMessages: 0,
+        errorMessages: 0,  timeEntries,
         success: req.flash('success'),
         pageName: 'tasks',
         uid: req.user.id,
-        username: req.user.username,
+        username: req.user.username,user: req.user,
         isUser: req.user.is_user,
         projectId: task.project_id,
         storyId: task.story_id,

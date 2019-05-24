@@ -66,6 +66,31 @@ block content
                                                     each user in projectUsers
                                                         if(user.id != project.product_owner)
                                                             option(label=user.name selected=(toEditTask && toEditTask.assignee === user.id)) #{user.id}
+
+                                            if toEditTask
+                                                div.card
+                                                    div.card-header Time Log
+                                                    div.card-body
+                                                        table
+                                                            tr
+                                                                th Start time
+                                                                th Time spend
+                                                                th Remaining estimate
+                                                            if timeEntries
+                                                                each tLog in timeEntries
+                                                                    tr
+                                                                        td #{ moment(tLog.loggedDate).format('DD.MM.YYYY HH:mm') }
+                                                                            input(type='hidden' value=tLog.loggedDate name="loggedDate[]")
+                                                                            input(type='hidden' value=tLog.id name="id[]")
+                                                                        td
+                                                                            div.form-group
+                                                                                label(for='task_time_spend') Time spend [h]
+                                                                                input#task_time_spend.form-control(type='number' min=0 value=tLog.loggedTime step="0.1" name="loggedTime[]")
+                                                                        td
+                                                                            div.form-group
+                                                                                label(for='task_time_estimate') Remaining estimate [h]
+                                                                                input#task_time_estimate.form-control(type='number' value=tLog.remainingTime step="0.1" name="remainingTime[]" min=0)
+
                                             if !toEditTask
                                                 button.btn.btn-primary.center-block.margin-top20#createBtn(type='submit') Create
                                             if toEditTask
