@@ -85,11 +85,11 @@ block content
                                                                         td
                                                                             div.form-group
                                                                                 label(for='task_time_spend') Time spend [h]
-                                                                                input#task_time_spend.form-control(type='number' min=0 value=tLog.loggedTime step="0.1" name="loggedTime[]")
+                                                                                input#task_time_spend.form-control(type='number' min=0 value=tLog.loggedTime step="0.1" name="loggedTime[]" readonly=toEditTask.assignee != user.id)
                                                                         td
                                                                             div.form-group
                                                                                 label(for='task_time_estimate') Remaining estimate [h]
-                                                                                input#task_time_estimate.form-control(type='number' value=tLog.remainingTime step="0.1" name="remainingTime[]" min=0)
+                                                                                input#task_time_estimate.form-control(type='number' value=tLog.remainingTime step="0.1" name="remainingTime[]" min=0 readonly=toEditTask.assignee != user.id)
 
                                             if !toEditTask
                                                 button.btn.btn-primary.center-block.margin-top20#createBtn(type='submit') Create
