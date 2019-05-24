@@ -194,7 +194,7 @@ router.post('/:taskId/edit/', TasksHelper.checkIfSMorMember, async function(req,
         assignee = null;
         status = 0;
     }
-    else if (data.assignee !== task.assignee) {
+    else if (+data.assignee !== +task.assignee) {
         assignee = data.assignee;
         status = 1;
     }
