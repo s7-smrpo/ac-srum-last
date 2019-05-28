@@ -1,20 +1,20 @@
 var express = require('express');
 var router = express.Router();
+var middleware = require('./middleware.js');
 
 
-router.get('/', function(req, res, next) {
-    console.log(req.user.username);
+router.get('/', middleware.ensureAuthenticated, function(req, res, next) {
+    console.log();
 
     res.render('editacc', {
         errorMessages: 0,
         success: 0,
-        firstname: "testFistName",
-        username: "testUsername",
-        surname: "testSurname",
-        email: "testEmail",
-        username: "testUsername",
+        firstname: req.user.name,
+        username: req.user.username,
+        surname: req.user.surname,
+        email: req.user.email,
         password: "testPass",
-        adminaccess: true,
+        adminaccess: req.user.is_user,
 
     });
 });
