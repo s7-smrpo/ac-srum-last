@@ -98,6 +98,7 @@ router.post('/create', SprintsHelper.isSM, async function(req, res, next) {
                 req.flash('error', 'Sprint dates overlapping!');
                 res.render('add_edit_sprint', {
                     errorMessages: req.flash('error'),
+                    defined_sprints: existing_sprints,
                     success: 0,
                     successUpdate: 0,
                     title: 'AC scrum vol2',
@@ -280,6 +281,7 @@ router.post('/:id/edit/', SprintsHelper.isSM, async function(req, res, next) {
                 req.flash('error', 'Sprint dates overlapping!');
                 res.render('add_edit_sprint', {
                     errorMessages: req.flash('error'),
+                    defined_sprints: existing_sprints,
                     success: 0,
                     title: 'AC scrum vol2',
                     pageName: 'add_sprint',
@@ -378,6 +380,12 @@ router.post('/:id/edit/', SprintsHelper.isSM, async function(req, res, next) {
     //     activeSprintId:activeSprintId,
     //     success: req.flash('success')});
 
+});
+
+//  ------------- delete a sprint ----------------
+router.get('/:id/delete', SprintsHelper.isSM, async function(req, res, next) {
+    await SprintsHelper.deleteSprintById(req.params.id);
+    return res.redirect('/sprints');
 });
 
 

@@ -30,6 +30,13 @@ block content
                                 h4.alert-heading #{errorMessages}
                                 p Something went wrong. Please check if your form is correct - otherwise try later or contact application administrator.
 
+                    if defined_sprints
+                        .col-md-12.col-md-offset-0.margin-top20
+                            .alert.alert-warning(role="alert")
+                                h4.alert-heading Already defined sprints
+                                each s in defined_sprints
+                                    li #{moment(s.startDate,'YYYY-MM-DD').format("DD.MM.YYYY") + " to " + moment(s.endDate,'YYYY-MM-DD').format("DD.MM.YYYY")}
+
                     if success !== 0
                         .col-md-12.col-md-offset-0.margin-top20
                             .alert.alert-success(role="alert")
@@ -107,7 +114,7 @@ block content
                     var s_formated = moment(start_date, 'YYYY-MM-DD').format("DD.MM.YYYY");
                     flatpickr("#flatpickr-tryme", {
                         mode: "range",
-                        minDate: start_date, //TODO: maybe to change
+                        minDate: new Date().fp_incr(1),
                         dateFormat: "d.m.Y",
                         defaultDate: [s_formated,e_formated]
                     });

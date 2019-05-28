@@ -109,10 +109,29 @@ async function canAccessProjectBySprintId(req, res, next) {
     }
 }
 
+async function deleteSprintById(sprint_id) {
+    if (!sprint_id) {
+        return {msg: 'No Id specified..', payload: 1};
+    }
+    try {
+        // !! - return true if successful, else false
+        return !!await Sprint.destroy({
+            where: {
+                id: sprint_id
+            },
+            force:true,
+        });
+    } catch (e) {
+        console.log("Can't delete " + e);
+        return false;
+    }
+}
+
 module.exports = {
     currentActiveSprint,
     sprintsInProjects,
     getSprint,
     isSM,
-    canAccessProjectBySprintId
+    canAccessProjectBySprintId,
+    deleteSprintById,
 };
