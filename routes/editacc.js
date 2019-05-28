@@ -5,6 +5,8 @@ var middleware = require('./middleware.js');
 var models = require('../models/');
 var User = models.User;
 
+var bcrypt = require('bcrypt');
+
 
 router.get('/', middleware.ensureAuthenticated, function(req, res, next) {
     console.log();
@@ -51,6 +53,8 @@ router.post('/', middleware.ensureAuthenticated, async function (req, res, next)
     if (data.is_user === undefined) {
         data.is_user = 1;
     }
+
+    data.password = await bcrypt.hashSync(data.password, 10);
 
     usr.setAttributes({
         name: data.name,
