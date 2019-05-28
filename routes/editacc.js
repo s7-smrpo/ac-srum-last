@@ -66,7 +66,24 @@ router.post('/', middleware.ensureAuthenticated, async function (req, res, next)
 
     });
 
-    await usr.save();
+    try {
+        await usr.save();
+    } catch (e) {
+        req.flash('error', 'Username already in use!');
+        res.render('editacc', {
+            success: 0,
+            errorMessages: req.flash('error'),
+            title: 'AC scrum vol2',
+            username: data.username,
+            firstname: data.name,
+            surname: data.surname,
+            isUser: data.is_user,
+            email: data.email,
+            is_user: data.is_user,
+        });
+
+    }
+
 
     req.flash('success', 'Account updated!');
     res.render('editacc', {
@@ -79,7 +96,6 @@ router.post('/', middleware.ensureAuthenticated, async function (req, res, next)
             isUser: data.is_user,
             email: data.email,
             is_user: data.is_user,
-
         });
     });
 
