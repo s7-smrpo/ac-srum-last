@@ -170,6 +170,36 @@ router.post('/:id/edit-doc/', ProjectHelper.isSMorAdmin, async function(req, res
 });
 
 
+// ------------------ endpoint for project backlog ------------------
+router.get('/:id/backlog/', ProjectHelper.isSMorAdmin, async function(req, res, next) {
+    let projectBacklog = await ProjectHelper.getProjectBacklog(req.params.id);
+    projectBacklog.reverse();
+    res.render('project_backlog', {
+        errorMessages: 0,
+        title: 'AC scrum vol2',
+        pageName: 'Project Backlog',
+        username: req.user.username,
+        isUser: req.user.is_user,
+        success: 0,
+        projectBacklog:projectBacklog,
+        projectId : req.params.id,
+    });
+});
+
+router.post('/:id/backlog/', ProjectHelper.isSMorAdmin, async function(req, res, next) {
+    let data = req.body;
+    let params = {}
+    params['comment'] = data.comment;
+    params['userID']  = req.user.id;
+    params['date']    = moment();
+    params['projID']  = req.params.id;
+    await ProjectHelper.addProjectBacklogPost(params);
+
+    res.redirect('/projects/'+req.params.id+'/backlog/');
+});
+
+
+
 
 // ------------------ endpoint for creating new projects ------------------
 

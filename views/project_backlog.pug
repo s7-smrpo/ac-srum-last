@@ -1,0 +1,110 @@
+extends layout
+
+block content
+
+    main.container(role="main")
+        .container.theme-showcase
+            .page-header
+                h3 Project Backlog
+
+                .container
+                    nav.navbar.navbar-expand-lg.navbar-light.bg-light
+                        ul.navbar-nav.mr-auto
+                            li.nav-item
+                            if toEditProject
+                                a.nav-link(href='/projects/' + toEditProject.id + '/view')
+                                    i.fas.fa-chevron-left
+                                    |  Back
+
+                            else
+                                a.nav-link(href='/admin_panel/')
+                                    i.fas.fa-chevron-left
+                                    |  Back
+
+                hr
+            div.main.container
+
+                    if errorMessages !== 0
+                        .col-md-12.col-md-offset-0.margin-top20
+                            .alert.alert-danger(role="alert")
+                                h4.alert-heading #{errorMessages}
+                                p Something went wrong. Please check if your form is correct or if this project name already exists - otherwise try later or contact application administrator.
+
+                    if success !== 0
+                        .col-md-12.col-md-offset-0.margin-top20
+                            .alert.alert-success(role="alert")
+                                h4.alert-heading Success.
+                                p #{success}.
+
+                    .row.bootstrap.snippets
+                        .col-md-12.col-md-offset-0.margin-top20
+                            .panel-heading
+                                | Comment panel
+                            form.well.form-horizontal#post_form(method='POST' action='/projects/' + projectId + '/backlog/')
+                                textarea.form-control#comment(name='comment' placeholder='write a comment...', rows='3')
+                                br
+                                button.btn.btn-info.pull-right(type='submit') Post
+                            hr
+                            .comment-wrapper
+                                .panel.panel-info
+                                    .panel-body
+                                        .clearfix
+                                        ul.media-list
+                                            each post in projectBacklog
+                                                li.media
+                                                    a.pull-left(href='#')
+                                                        img.img-circle(src='/profile.png', alt='')
+                                                    .media-body
+                                                        span.text-muted.pull-right
+                                                            small.text-muted #{post.date}
+                                                        strong.text-success @#{post.username}
+                                                        p
+                                                            | #{post.comment}
+
+
+
+
+
+    style.
+        body {
+            margin-top: 20px;
+        }
+
+        .comment-wrapper .panel-body {
+            max-height: 650px;
+            overflow: auto;
+        }
+
+        .comment-wrapper .media-list .media img {
+            width: 64px;
+            height: 64px;
+            border: 2px solid #e5e7e8;
+            margin-right: 20px;
+        }
+
+        .comment-wrapper .media-list .media {
+            border-bottom: 1px dashed #efefef;
+            margin-bottom: 25px;
+        }
+
+    script.
+        window.addEventListener('load', function () {
+            $('#post_form').bootstrapValidator({
+                // To use feedback icons, ensure that you use Bootstrap v3.1.0 or later
+                framework: 'bootstrap',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    comment: {
+                        validators: {
+                            notEmpty: {
+                                message: 'Please enter a few words.'
+                            }
+                        }
+                    }
+                },
+            });
+         });

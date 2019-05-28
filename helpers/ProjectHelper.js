@@ -1,6 +1,7 @@
 var models = require('../models');
 var Project = models.Project;
 var UserProject = models.UserProject;
+var ProjectBacklog = models.ProjectBacklog;
 var User = models.User;
 var sequelize = require('sequelize');
 
@@ -34,6 +35,50 @@ async function getProject(pid) {
             ]
         },
     });
+}
+
+async function get_user(user_id){
+    return await User.findOne({
+        where:{
+            id : user_id
+        }
+    });
+}
+
+async function getProjectBacklog(pid) {
+    var projectBacklog = await ProjectBacklog.findAll({
+        where: {
+            project_id: pid
+        },
+    })//.map((row) => row.set("username",await getUsername(row.user_id)));
+
+    for(let i = 0; i < projectBacklog.length; i++){
+        let user = await get_user(projectBacklog[i].dataValues.user_id);
+        projectBacklog[i].username = user.name + "  " + user.surname;
+    }
+
+    //.map( (row) => row[0].username =  "kurac");
+    // return await ProjectBacklog.findAll({
+    //     where: {
+    //         project_id: pid
+    //     },
+    // });
+    return projectBacklog;
+}
+
+async function addProjectBacklogPost(params) {
+    // let params = {}
+    // params['comment'] = data.comment;
+    // params['userID']  = req.user.id;
+    // params['date']    = moment();
+    // params['projID']  = req.params.id;
+    const createdPost = ProjectBacklog.build({
+        comment     : params['comment'],
+        user_id     : params['userID'],
+        date        : params['date'],
+        project_id  : params['projID'],
+    });
+    await createdPost.save();
 }
 
 
@@ -286,4 +331,6 @@ module.exports = {
     canAccessProject,
     getProject,
     getSMProjects,
+    getProjectBacklog,
+    addProjectBacklogPost,
 };
