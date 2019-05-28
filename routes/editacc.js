@@ -8,6 +8,31 @@ var User = models.User;
 var bcrypt = require('bcrypt');
 
 
+//Edit user if admin
+router.get('/:id', middleware.ensureAuthenticated, async function(req, res, next) {
+    console.log();
+
+    //preberi userja po id, da dobiš podatke (spremeni id parameter na :id)
+    let usr = await User.findOne({
+        where: {
+            id: req.user.id,
+        }
+    });
+
+    //nafilaj podatke od firstname vse do konca za prikaz
+    res.render('editacc', {
+        errorMessages: 0,
+        success: 0,
+        //firstname: usr.name,
+        //username: usr.username,
+        //surname: usr.surname,
+        //email: usr.email,
+        //adminaccess: usr.is_user,
+
+    });
+});
+
+//Edit user -self
 router.get('/', middleware.ensureAuthenticated, function(req, res, next) {
     console.log();
 
@@ -23,10 +48,16 @@ router.get('/', middleware.ensureAuthenticated, function(req, res, next) {
     });
 });
 
+
+// Write new data in database
 router.post('/', middleware.ensureAuthenticated, async function (req, res, next) {
     var data = req.body;
     //var usr = User.findById(req.user.id);
 
+
+    //dodaj if stavek: če je uporabnik prišel na to stran iz administration panela potem zamenjaj parameter id
+    //na id od userja, ki ga spreminjaš, drugače
+    //če je uporabnik prišel iz "Edit accout" (lastno urejanje) gumba potem pusti tako kot je
     let usr = await User.findOne({
         where: {
             id: req.user.id,
