@@ -6,6 +6,8 @@ block content
 
     link(href='/stylesheets/vendor/select2.min.css', rel='stylesheet')
     link(href='/stylesheets/vendor/select2-bootstrap.min.css', rel='stylesheet')
+    link(href='/stylesheets/vendor/select2.min.css', rel='stylesheet')
+    link(href='/stylesheets/vendor/select2-bootstrap.min.css', rel='stylesheet')
 
 
     main.container(role="main")
@@ -64,12 +66,11 @@ block content
                                                 label Sprint project
                                                 input.form-control(type='text' name="sprint_project" placeholder='Sprint project' value=project.name readonly='')
                                             div.form-group
-                                                if(toEditSprint)
-                                                    label Sprint stories
-                                                    select#sprint_stories.form-control(name='stories', multiple='multiple' placeholder='Sprint stories' readonly='')
+                                                label Sprint stories
+                                                select#sprint_stories.form-control(name='stories', multiple='multiple' placeholder='Sprint stories')
+                                                    if(currentSprint)
                                                         each story in stories
-                                                            option(value=story.id  selected=(story.sprint_id===currentSprint.id) readonly='') #{story.name}
-
+                                                            option(value=story.id estTime=story.estimatedTime  selected=(story.sprint_id === currentSprint.id)) #{story.name}
 
                 if tasks && !success && !successUpdate && !errorMessages
 
