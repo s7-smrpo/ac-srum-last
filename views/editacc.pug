@@ -28,12 +28,12 @@ block content
                         .col-md-12.col-md-offset-0.margin-top20
                             .alert.alert-success(role="alert")
                                 h4.alert-heading Success.
-                                p New user - #{success} has been successfully added.
+                                p #{success}
 
                     div.col-md-9.col-md-offset-0.margin-center.margin-top20
                         div.panel-body
                             div
-                                form.well.form-horizontal(method='POST' action='/register')#register_form
+                                form.well.form-horizontal(method='POST' action='/editacc')#register_form
                                     div.panel-body
                                         div.col-md-12.col-md-offset-0
                                             div.form-group
@@ -50,19 +50,17 @@ block content
                                                 input#username.form-control(type='text' placeholder='Username' name='username' value=username)
                                             div.form-group
                                                 label(for='password1') Password:
-                                                input#password1.form-control(type='password' placeholder='Enter password' name='password' value=password)
+                                                input#password1.form-control(type='password' placeholder='Change password' name='password' value="")
                                             div.form-group
                                                 label(for='password2') Verify password:
-                                                input#password2.form-control(type='password' placeholder='Retype password' name='password2' value=password)
+                                                input#password2.form-control(type='password' placeholder='Retype new password' name='password2' value="")
                                             div.custom-control.custom-checkbox
-                                                if adminaccess
-                                                    input#adminacc.custom-control-input(type='checkbox' name='is_user' value="0" checked)
-                                                    label.custom-control-label(for='adminacc') Administrator access
-                                                else
+                                                if adminaccess === 1
                                                     input#adminacc.custom-control-input(type='checkbox' name='is_user' value="0")
-                                                    label.custom-control-label(for='adminacc') Administrator access
+                                                else
+                                                    input#adminacc.custom-control-input(type='checkbox' name='is_user' value="0" checked)
 
-
+                                                label.custom-control-label(for='adminacc') Administrator access
 
 
                                             button.btn.btn-primary.center-block.margin-top20#registerBtn(type='submit') Save
