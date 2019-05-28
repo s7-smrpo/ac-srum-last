@@ -63,6 +63,7 @@ router.get('/project/:id/create', ProjectHelper.isSMorPM, async function(req, re
 router.post('/project/:id/create', ProjectHelper.isSMorPM, async function(req, res, next) {
     let data = req.body;
     let project_id = req.params.id;
+    let isSM = await StoriesHelper.isSM(req.params.id, req.user.id);
 
     if (data.estimatedTime === "") {
         data.estimatedTime = null;
@@ -84,20 +85,23 @@ router.post('/project/:id/create', ProjectHelper.isSMorPM, async function(req, r
         if (!await StoriesHelper.isValidName(createdUserStory)){
             req.flash(req.flash('error', `Story Name: ${createdUserStory.name} already in use`));
             return res.render('stories', { errorMessages: req.flash('error'), success: 0,
-                projectId: project_id, importance_values: importance_values, uid: req.user.id, username: req.user.username, isUser: req.user.is_user});
+                projectId: project_id, importance_values: importance_values, uid: req.user.id, username: req.user.username, isUser: req.user.is_user,
+                isSM: isSM,});
         }
 
         await createdUserStory.save();
 
         req.flash('success', 'User story - ' + createdUserStory.name + ' has been successfully created');
         res.render('stories', { errorMessages: 0, success: req.flash('success'),
-            projectId: project_id, importance_values: importance_values, uid: req.user.id, username: req.user.username, isUser: req.user.is_user});
+            projectId: project_id, importance_values: importance_values, uid: req.user.id, username: req.user.username, isUser: req.user.is_user,
+            isSM: isSM});
 
     } catch (e) {
         console.log(e);
         req.flash('error', 'Error!');
         res.render('stories', { errorMessages: req.flash('error'), success: 0,
-            projectId: project_id, importance_values: importance_values, uid: req.user.id, username: req.user.username, isUser: req.user.is_user});
+            projectId: project_id, importance_values: importance_values, uid: req.user.id, username: req.user.username, isUser: req.user.is_user,isSM: isSM
+        });
 
     }
 
