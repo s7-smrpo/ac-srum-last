@@ -19,6 +19,7 @@ router.get('/:id', middleware.ensureAuthenticated, async function(req, res, next
         }
     });
 
+
     //nafilaj podatke od firstname vse do konca za prikaz
     res.render('editacc', {
         errorMessages: 0,
