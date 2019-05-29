@@ -171,7 +171,7 @@ router.post('/:id/edit-doc/', ProjectHelper.isSMorAdmin, async function(req, res
 
 
 // ------------------ endpoint for project backlog ------------------
-router.get('/:id/backlog/', ProjectHelper.isSMorAdmin, async function(req, res, next) {
+router.get('/:id/backlog/', middleware.ensureAuthenticated, async function(req, res, next) {
     let projectBacklog = await ProjectHelper.getProjectBacklog(req.params.id);
     projectBacklog.reverse();
     res.render('project_backlog', {
@@ -186,7 +186,7 @@ router.get('/:id/backlog/', ProjectHelper.isSMorAdmin, async function(req, res, 
     });
 });
 
-router.post('/:id/backlog/', ProjectHelper.isSMorAdmin, async function(req, res, next) {
+router.post('/:id/backlog/', middleware.ensureAuthenticated, async function(req, res, next) {
     let data = req.body;
     let params = {}
     params['comment'] = data.comment;

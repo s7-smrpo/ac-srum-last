@@ -166,13 +166,25 @@ async function getTaskLoggedTimeArray(task) {
         ],
     });
 
-    return (timetableArray || []).map(x => x.dataValues)
+    const out = [];
+    (timetableArray || []).map(x => x.dataValues)
         .map(x => {
 
             x.loggedTime = Math.round(  x.loggedTime * 100) / 100;
             return x;
         })
-        .sort((a, b) => a.loggedDate -b.loggedDate);
+        .sort((a, b) => a.loggedDate -b.loggedDate)
+        .map(z => {
+            const found = out.find(x => moment(z.loggedDate).format('DD.MM.YYYY') === moment(x.loggedDate).format('DD.MM.YYYY'));
+            if (found) {
+                found.loggedTime += z.loggedTime;
+                found.remainingTime += z.remainingTime;
+            } else {
+                out.push(z);
+            }
+        });
+
+    return out;
 }
 
 async function setTaskLoggedTimeArray(task, times) {

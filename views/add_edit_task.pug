@@ -37,12 +37,6 @@ block content
                                 h4.alert-heading Success.
                                 p #{success}.
 
-                    if toEditTask && toEditTask.status > 1
-                        .col-md-12.col-md-offset-0.margin-top20
-                            .alert.alert-warning(role="warning")
-                                h4.alert-heading Warning.
-                                p This task's status is currently: #{toEditTask.status === 2 ? "accepted but not in progress" : ""}#{toEditTask.status === 3 ? " in progress" : ""}#{toEditTask.status === 4 ? " finished" : ""}.
-
 
                     div.col-md-9.col-md-offset-0.margin-center.margin-top20
                         div.panel-body
@@ -79,7 +73,7 @@ block content
                                                             if timeEntries
                                                                 each tLog in timeEntries
                                                                     tr
-                                                                        td #{ moment(tLog.loggedDate).format('DD.MM.YYYY HH:mm') }
+                                                                        td #{ moment(tLog.loggedDate).format('DD.MM.YYYY') }
                                                                             input(type='hidden' value=tLog.loggedDate name="loggedDate[]")
                                                                             input(type='hidden' value=tLog.id name="id[]")
                                                                         td
