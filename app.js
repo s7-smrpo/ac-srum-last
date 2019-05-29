@@ -19,6 +19,7 @@ var sprintsRouter = require('./routes/sprints');
 var projectsRouter = require('./routes/projects');
 var storiesRouter = require('./routes/stories');
 var tasksRouter = require('./routes/tasks');
+var editaccRouter = require('./routes/editacc');
 
 
 var models = require('./models');
@@ -60,7 +61,7 @@ app.use('/sprints', sprintsRouter);
 app.use('/projects', projectsRouter);
 app.use('/stories', storiesRouter);
 app.use('/tasks', tasksRouter);
-
+app.use('/editacc', editaccRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

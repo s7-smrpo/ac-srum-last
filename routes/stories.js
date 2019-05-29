@@ -34,11 +34,11 @@ router.get('/projectAllowedSprintStories/:id',ProjectHelper.isSMorPM, async func
 router.get('/project/:id', async function(req, res, next) {
     let projectStories = await StoriesHelper.listStories(req.params.id);
     res.render('project', {
-        errorMessages: 0, 
-        success: 0, 
-        stories: projectStories, 
-        uid: req.user.id, 
-        username: req.user.username, 
+        errorMessages: 0,
+        success: 0,
+        stories: projectStories,
+        uid: req.user.id,
+        username: req.user.username,
         isUser: req.user.is_user
     });
 });
@@ -48,14 +48,14 @@ router.get('/project/:id/create', ProjectHelper.isSMorPM, async function(req, re
     let project_id = req.params.id;
     let isSM = await StoriesHelper.isSM(req.params.id, req.user.id);
 
-    res.render('stories', { 
-        errorMessages: 0, 
+    res.render('stories', {
+        errorMessages: 0,
         success: 0,
         isSM: isSM,
-        projectId: project_id, 
-        importance_values: importance_values, 
-        uid: req.user.id, 
-        username: req.user.username, 
+        projectId: project_id,
+        importance_values: importance_values,
+        uid: req.user.id,
+        username: req.user.username,
         isUser: req.user.is_user
     });
 });
@@ -119,15 +119,15 @@ router.get('/:id/edit/', StoriesHelper.checkIfSMorPM, async function(req, res, n
         res.redirect("/");
     }
 
-    return res.render('stories', { 
-        errorMessages: 0, 
-        success: 0, 
+    return res.render('stories', {
+        errorMessages: 0,
+        success: 0,
         userStory: userStory,
-        projectId: userStory.project_id, 
+        projectId: userStory.project_id,
         importance_values: importance_values,
         isSM: isSM,
-        uid: req.user.id, 
-        username: req.user.username, 
+        uid: req.user.id,
+        username: req.user.username,
         isUser: req.user.is_user
     });
 
@@ -168,6 +168,7 @@ router.post('/:id/edit/', StoriesHelper.checkIfSMorPM, async function(req, res, 
         return res.render('stories', { errorMessages: req.flash('error'), success: 0, userStory: storyObject, isSM: isSM,
             projectId: story.project_id, importance_values: importance_values, uid: req.user.id, username: req.user.username, isUser: req.user.is_user});
     }
+
 
     await story.save();
 
@@ -221,7 +222,7 @@ router.post('/:pid/:sid/reject/', StoriesHelper.checkIfSMorPM, async function (r
     } catch (e) {
         console.log(e);
         req.flash('error', 'Error!');
-        
+
     }
 
 });
