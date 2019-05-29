@@ -22,11 +22,11 @@ block content
                                     i.fas.fa-chevron-left
                                     |   Sprints
                                     if project.scrum_master == uid
-                                        if !moment().isBetween(moment(currentSprint.startDate), moment(currentSprint.endDate), 'days', '[]')
-                                            li.nav-item
-                                                a.nav-link(href='/sprints/' + currentSprint.id + '/edit') Edit Sprint
-                                            li.nav-item
-                                                a.nav-link(href='/sprints/' + currentSprint.id + '/delete') Delete Sprint
+                                        //if !moment().isBetween(moment(currentSprint.startDate), moment(currentSprint.endDate), 'days', '[]')
+                                        li.nav-item
+                                            a.nav-link(href='/sprints/' + currentSprint.id + '/edit') Edit Sprint
+                                        li.nav-item
+                                            a.nav-link(href='/sprints/' + currentSprint.id + '/delete') Delete Sprint
 
 
                 hr

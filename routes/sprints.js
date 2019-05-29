@@ -239,6 +239,7 @@ router.get('/:id/edit', SprintsHelper.isSM, async function(req, res, next) {
         currentSprint: currentSprint,
         toEditSprint: currentSprint,
         activeSprintId:activeSprintId,
+        project: currentProject,
     });
 });
 
@@ -289,9 +290,9 @@ router.post('/:id/edit/', SprintsHelper.isSM, async function(req, res, next) {
                     username: req.user.username,
                     isUser: req.user.is_user,
                     toEditSprint: currentSprint,
-                    projects: ad_sm_projects,
                     stories: projectStories,
                     currentSprint:currentSprint,
+                    project: currentProject,
 
 
                 });
@@ -313,9 +314,9 @@ router.post('/:id/edit/', SprintsHelper.isSM, async function(req, res, next) {
                 username: req.user.username,
                 isUser: req.user.is_user,
                 toEditSprint: currentSprint,
-                projects: ad_sm_projects,
                 stories: projectStories,
                 currentSprint:currentSprint,
+                project: currentProject,
 
             });
             return;
@@ -364,6 +365,7 @@ router.post('/:id/edit/', SprintsHelper.isSM, async function(req, res, next) {
             toEditSprint: currentSprint,
             stories: projectStories,
             currentSprint:currentSprint,
+            project: currentProject,
 
         });
 

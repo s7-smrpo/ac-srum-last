@@ -51,21 +51,28 @@ block content
                                         div.col-md-12.col-md-offset-0
                                             div.form-group
                                                 label Date range
-                                                input.form-control#flatpickr-tryme(type='text' name="selected_date", placeholder="Start date to end date"
-                                                value=(toEditSprint ? toEditSprint.startDate + ' to ' + toEditSprint.endDate : ''))
+                                                if !moment().isBetween(moment(currentSprint.startDate), moment(currentSprint.endDate), 'days', '[]')
+                                                    input.form-control#flatpickr-tryme(type='text' name="selected_date", placeholder="Start date to end date"
+                                                    value=(toEditSprint ? toEditSprint.startDate + ' to ' + toEditSprint.endDate : ''))
+                                                else
+                                                    input.form-control(type='text' name="selected_date" placeholder="Start date to end date" readonly='' value=selected_sprint_date)
                                             div.form-group
                                                 label(for='velocity') Sprint velocity
                                                 input#velocity.form-control(name="velocity" type='number', placeholder='Sprint velocity'
                                                 value=(toEditSprint ? toEditSprint.velocity : ''))
                                             div.form-group
-                                                label(for='sprint_project') Sprint project
-                                                select#sprint_project.form-control(name="sprint_project", placeholder='Sprint project')
-                                                    option
-                                                    each project in projects
-                                                        if(toEditSprint)
-                                                            option(label=project.name selected=(toEditSprint.project_id===project.id)) #{project.id}
-                                                        else
-                                                            option(label=project.name) #{project.id}
+                                                if !moment().isBetween(moment(currentSprint.startDate), moment(currentSprint.endDate), 'days', '[]')
+                                                    label(for='sprint_project') Sprint project
+                                                    select#sprint_project.form-control(name="sprint_project", placeholder='Sprint project')
+                                                        option
+                                                        each project in projects
+                                                            if(toEditSprint)
+                                                                option(label=project.name selected=(toEditSprint.project_id===project.id)) #{project.id}
+                                                            else
+                                                                option(label=project.name) #{project.id}
+                                                else
+                                                    label Sprint project
+                                                    input.form-control(type='text' name="sprint_project" placeholder='Sprint project' id='f_proj' data-proj_id=project.id value=project.name readonly='')
                                             div.form-group
                                                 label Sprint stories
                                                 select#sprint_stories.form-control(name='stories', multiple='multiple' placeholder='Sprint stories')
@@ -130,6 +137,7 @@ block content
                     const select = document.querySelector("select[name='stories']")
                     const value = select.value;
                     const option = select.querySelector(`option[value='${value}']`)
+                    $('#f_proj').val($('#f_proj').data("proj_id"))
                 });
 
                 $("#sprint_project").change(function () {
