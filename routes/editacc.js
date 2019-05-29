@@ -1,137 +1,90 @@
 var express = require('express');
 var router = express.Router();
 var middleware = require('./middleware.js');
-
 var models = require('../models/');
 var User = models.User;
-
 var bcrypt = require('bcrypt');
+const UserHelper = require('../helpers/UserHelper');
+const ProjectHelper = require('../helpers/ProjectHelper');
 
 
-//Edit user if admin
-router.get('/:id', middleware.ensureAuthenticated, async function(req, res, next) {
-    console.log();
-
-    //preberi userja po id, da dobiš podatke (spremeni id parameter na :id)
-    let usr = await User.findOne({
-        where: {
-            id: req.user.id,
-        }
-    });
 
 
-    //nafilaj podatke od firstname vse do konca za prikaz
-    res.render('editacc', {
-        errorMessages: 0,
-        success: 0,
-        //firstname: usr.name,
-        //username: usr.username,
-        //surname: usr.surname,
-        //email: usr.email,
-        //adminaccess: usr.is_user,
-
-    });
-});
 
 //Edit user -self
-router.get('/', middleware.ensureAuthenticated, function(req, res, next) {
-    console.log();
-
+router.get('/', middleware.ensureAuthenticated, async function(req, res, next) {
+    let user_to_edit = await UserHelper.getUser(req.user.id);
     res.render('editacc', {
         errorMessages: 0,
         success: 0,
-        firstname: req.user.name,
+        pageName: 'Edit user',
+        uid: req.user.id,
         username: req.user.username,
-        surname: req.user.surname,
-        email: req.user.email,
-        adminaccess: req.user.is_user,
-
+        isUser: req.user.is_user,
+        editUser: user_to_edit,
+        user: req.user,
     });
 });
-
 
 // Write new data in database
 router.post('/', middleware.ensureAuthenticated, async function (req, res, next) {
     var data = req.body;
-    //var usr = User.findById(req.user.id);
+    let user_update  = await UserHelper.updateUser(req.user.id,data);
+    (user_update.error   !== undefined) ? req.flash('error', user_update.error) : req.flash('success',user_update.success);
+    let user_to_edit = user_update.user;
 
-
-    //dodaj if stavek: če je uporabnik prišel na to stran iz administration panela potem zamenjaj parameter id
-    //na id od userja, ki ga spreminjaš, drugače
-    //če je uporabnik prišel iz "Edit accout" (lastno urejanje) gumba potem pusti tako kot je
-    let usr = await User.findOne({
-        where: {
-            id: req.user.id,
-        }
+    return res.render('editacc', {
+        errorMessages: (user_update.error   !== undefined) ? req.flash('error')    : 0,
+        success:       (user_update.success !== undefined) ? req.flash('success')  : 0 ,
+        title: 'AC scrum vol2',
+        editUser: user_to_edit,
+        username: req.user.username,
+        isUser: req.user.is_user,
+        user: req.user,
     });
+});
 
-    if (data.password !== data.password2) {
+//Delete User
+router.get('/delete/:id', middleware.isAllowed, async function(req, res, next) {
+    await UserHelper.deleteUserById(req.params.id);
+    return res.redirect('/admin_panel');
+});
 
-        req.flash('error', 'Passwords do not match.');
-        res.render('editacc', {
-            errorMessages: req.flash('error'),
-            success: 0,
-            title: 'AC scrum vol2',
-            username: req.username,
-            firstname: req.name,
-            surname: req.surname,
-            isUser: req.is_user,
-            email: req.email,
-            is_user: req.is_user,
-
-        });
-    }
-
-    if (data.is_user === undefined) {
-        data.is_user = 1;
-    }
-
-    data.password = await bcrypt.hashSync(data.password, 10);
-
-    usr.setAttributes({
-        name: data.name,
-        surname: data.surname,
-        email: data.email,
-        username: data.username,
-        password: data.password,
-        is_user: data.is_user,
-
-    });
-
-    try {
-        await usr.save();
-    } catch (e) {
-        req.flash('error', 'Username already in use!');
-        res.render('editacc', {
-            success: 0,
-            errorMessages: req.flash('error'),
-            title: 'AC scrum vol2',
-            username: data.username,
-            firstname: data.name,
-            surname: data.surname,
-            isUser: data.is_user,
-            email: data.email,
-            is_user: data.is_user,
-        });
-
-    }
-
-
-    req.flash('success', 'Account updated!');
+//Edit user if admin
+router.get('/:id', middleware.isAllowed, async function(req, res, next) {
+    let user_to_edit = await UserHelper.getUser(req.params.id);
     res.render('editacc', {
-            success: req.flash('success'),
-            errorMessages: 0,
-            title: 'AC scrum vol2',
-            username: data.username,
-            firstname: data.name,
-            surname: data.surname,
-            isUser: data.is_user,
-            email: data.email,
-            is_user: data.is_user,
-        });
+        errorMessages: 0,
+        success: 0,
+        pageName: 'Edit user',
+        uid: req.user.id,
+        username: req.user.username,
+        isUser: req.user.is_user,
+        editUser: user_to_edit,
+        user: req.user,
+    });
+});
+
+router.post('/:id', middleware.isAllowed, async function (req, res, next) {
+    var data = req.body;
+    let user_update  = await UserHelper.updateUser(req.params.id,data);
+    (user_update.error   !== undefined) ? req.flash('error', user_update.error) : req.flash('success',user_update.success);
+    let user_to_edit = user_update.user;
+
+    if(parseInt(user_to_edit.is_user) !== 0) return res.redirect('/dashboard');
+
+    return res.render('editacc', {
+        errorMessages: (user_update.error   !== undefined) ? req.flash('error')    : 0,
+        success:       (user_update.success !== undefined) ? req.flash('success')  : 0 ,
+        title: 'AC scrum vol2',
+        editUser: user_to_edit,
+        username: req.user.username,
+        isUser: req.user.is_user,
+        user: req.user,
     });
 
 
 
+});
 
 module.exports = router;

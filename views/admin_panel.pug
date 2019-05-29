@@ -33,7 +33,7 @@ block content
                                     th(scope="col") Surname
                                     th(scope="col") E-mail
                                     th(scope="col") Role
-                                    th(scope="col") Menage
+                                    th(scope="col") Manage
                             tbody
                                 each user in users
                                     tr
@@ -44,7 +44,7 @@ block content
                                         td #{user.email}
                                         td #{user.is_user ? 'User' : 'Administrator'}
                                         td
-                                            a.btn.btn-danger(href="/editacc/" + user.id) &#10006
+                                            a.btn.btn-danger(href="/editacc/delete/" + user.id) &#10006
                                             a.btn.btn-primary(href="/editacc/" + user.id style='float:right;') Edit
 
                                         //td
