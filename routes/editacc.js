@@ -70,8 +70,9 @@ router.post('/:id', middleware.isAllowed, async function (req, res, next) {
     let user_update  = await UserHelper.updateUser(req.params.id,data);
     (user_update.error   !== undefined) ? req.flash('error', user_update.error) : req.flash('success',user_update.success);
     let user_to_edit = user_update.user;
+    let c_user = await UserHelper.getUser(req.user.id);
 
-    if(parseInt(user_to_edit.is_user) !== 0) return res.redirect('/dashboard');
+    if(parseInt(c_user.is_user) !== 0) return res.redirect('/dashboard');
 
     return res.render('editacc', {
         errorMessages: (user_update.error   !== undefined) ? req.flash('error')    : 0,
